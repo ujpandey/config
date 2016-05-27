@@ -1,0 +1,14 @@
+<?xml version="1.0"?>
+<root>
+  <item>
+    <name>Swap Option and Command when Emacs is running.</name>
+    <identifier>private.app_emacs_swap_option_and_command </identifier>
+
+    <only>EMACS</only>
+
+    <autogen>__KeyToKey__ KeyCode::OPTION_R, KeyCode::COMMAND_R</autogen>
+    <autogen>__KeyToKey__ KeyCode::COMMAND_R, KeyCode::OPTION_R</autogen>
+    <autogen>__KeyToKey__ KeyCode::OPTION_L, KeyCode::COMMAND_L</autogen>
+    <autogen>__KeyToKey__ KeyCode::COMMAND_L, KeyCode::OPTION_L</autogen>
+  </item>
+</root>

@@ -311,6 +311,7 @@
 ;; and command. Look at kb inside config inside our main git repo.
 
 ;;==============================================================================
+(setenv "DICTIONARY" "en_US")
 
 ;;------------------------------------------------------------------------------
 ;; Customization code below this set through GUI customization.
