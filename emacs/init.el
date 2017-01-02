@@ -107,8 +107,11 @@
     web-mode
     ;;++++ org mode ++++
     org
+    org-plus-contrib
     ;;++++ ocaml ++++
     tuareg
+    ;;++++ java ++++
+    ;; emacs-eclim
     )
   "Packages to be installed by default.")
 
@@ -121,54 +124,118 @@
 
 
 ;;-----------------------------------------------------------------------------
-;; Look and feel
+;; Programming Languages specific configuration
 ;;-----------------------------------------------------------------------------
 
-;; Disable the startup message
-(setq inhibit-startup-screen t)
+;; C/C++ mode
+(setq c-default-style "bsd"
+      c-basic-offset 4)
 
-;; Disable menu, scroll and tool bars
-(menu-bar-mode -1)
-(when (fboundp 'tool-bar-mode)
-  (tool-bar-mode -1))
-(when (fboundp 'scroll-bar-mode)
-  (scroll-bar-mode -1))
+(defun my-c++-mode-hook ()
+  ;; switch/case:  make each case line indent from switch
+  (c-set-offset 'case-label '+)
+)
 
-;; Line and column numbers on.
-(line-number-mode 1)
-(column-number-mode 1)
+(add-hook 'c++-mode-hook 'my-c++-mode-hook)
 
-;; Line fill set to 79
-(setq-default fill-column 79)
+;; groovy-mode
+;; (require 'groovy-mode)
 
-;; Highlight matching parens
-(show-paren-mode 1)
+;; (defun my-groovy-mode-hook ()
+;;   "Hooks for Groovy mode."
+;;   (require 'groovy-electric)
+;;   (groovy-electric-mode)
+;;   )
 
-;; Tab width set to 4
-(setq tab-width 4)
+;; (add-hook 'groovy-mode-hook 'my-groovy-mode-hook)
 
-;; No tabs for indentation
-(setq-default indent-tabs-mode nil)
+;; web-mode
+(require 'web-mode)
+(add-to-list 'auto-mode-alist '("\\.phtml\\'" . web-mode))
+(add-to-list 'auto-mode-alist '("\\.tpl\\.php\\'" . web-mode))
+(add-to-list 'auto-mode-alist '("\\.[agj]sp\\'" . web-mode))
+(add-to-list 'auto-mode-alist '("\\.as[cp]x\\'" . web-mode))
+(add-to-list 'auto-mode-alist '("\\.erb\\'" . web-mode))
+(add-to-list 'auto-mode-alist '("\\.mustache\\'" . web-mode))
+(add-to-list 'auto-mode-alist '("\\.djhtml\\'" . web-mode))
+(add-to-list 'auto-mode-alist '("\\.html?\\'" . web-mode))
+(add-to-list 'auto-mode-alist '("\\.css?\\'" . web-mode))
+(add-to-list 'auto-mode-alist '("\\.js?\\'" . web-mode))
 
-;; Automatically indent after a newline (like vi)
-(global-set-key (kbd "RET") 'newline-and-indent)
+(defun my-web-mode-hook ()
+  "Hooks for Web mode."
+  (setq web-mode-markup-indent-offset 2)
+  (setq web-mode-css-indent-offset 2)
+  (setq web-mode-code-indent-offset 2)
+  )
 
-;; Save position when buffers are closed
-(setq-default save-place t)
+(add-hook 'web-mode-hook  'my-web-mode-hook)
 
-;; load solarized. I prefer zen-burn.
-;; (load-theme 'solarized-light t)
-;; (load-theme 'solarized-dark t)
+;; org mode
+(require 'org)
+(define-key org-mode-map (kbd "<M-S-up>") nil)
+(define-key org-mode-map (kbd "<M-S-down>") nil)
+(define-key org-mode-map (kbd "<M-up>") nil)
+(define-key org-mode-map (kbd "<M-down>") nil)
+(define-key org-mode-map (kbd "<M-S-left>") nil)
+(define-key org-mode-map (kbd "<M-S-right>") nil)
+(define-key org-mode-map (kbd "<M-left>") nil)
+(define-key org-mode-map (kbd "<S-left>") nil)
+(define-key org-mode-map (kbd "<S-right>") nil)
+(define-key org-mode-map (kbd "<S-up>") nil)
+(define-key org-mode-map (kbd "<S-down>") nil)
+(define-key org-mode-map (kbd "<M-right>") nil) 
+(define-key org-mode-map (kbd "C-<tab>") nil)
+(define-key org-mode-map (kbd "C-S-<tab>") nil)
+(define-key org-mode-map (kbd "<C-up>") nil)
+(define-key org-mode-map (kbd "<C-down>") nil)
 
-;; load zen-burn.
-(load-theme 'zenburn t)
+(global-set-key "\C-cl" 'org-store-link)
+(global-set-key "\C-ca" 'org-agenda)
+(global-set-key "\C-cc" 'org-capture)
 
-;;=============================================================================
+(eval-after-load "org" '(require 'ox-odt nil t))
+(eval-after-load "org" '(require 'ox-beamer nil t))
+(eval-after-load "org" '(require 'ox-s5 nil t))
+
+(require 'ox-latex)
+(setq org-src-fontify-natively t)
+;; (add-to-list 'org-latex-packages-alist '("" "minted"))
+;; (setq org-latex-listings 'minted)
+;; (setq org-latex-minted-options
+;;       '(("bgcolor" "black")
+;;         ("frame" "single")
+;;         ("fontsize" "\\scriptsize")
+;;         ("linenos" "")))
+;; (setq org-latex-pdf-process
+;;       '("pdflatex -shell-escape -interaction nonstopmode -output-directory %o %f"
+;;         "pdflatex -shell-escape -interaction nonstopmode -output-directory %o %f"
+;;         "pdflatex -shell-escape -interaction nonstopmode -output-directory %o %f"))
+
+;; (org-babel-do-load-languages
+;;  'org-babel-load-languages
+;;  '((ditaa . t)
+;;    (C .t))) ; this line activates ditaa
+
+;; java mode
+;; (require 'eclim)
+;; (global-eclim-mode)
+;; (require 'eclimd)
+;; (setq eclim-eclipse-dirs "/Applications/Eclipse.app/Contents/Eclipse")
+;; (setq eclim-executable "~/Applications/Eclipse.app/Contents/Eclipse/eclim")
+
+;;==============================================================================
 
 
 ;;-----------------------------------------------------------------------------
 ;; Behavior
 ;;-----------------------------------------------------------------------------
+
+;; Set scratch mode to org-mode because it's more useful in general
+(setq initial-major-mode 'org-mode)
+(setq initial-scratch-message "\
+# This buffer is for notes you don't want to save.
+# Make sure to save what you need for later with C-x s.\n\n")
 
 ;; load newer bytecode if exists for packages
 (setq load-prefer-newer t)
@@ -245,61 +312,52 @@
 
 ;;==============================================================================
 
+
 ;;-----------------------------------------------------------------------------
-;; Programming Languages specific configuration
+;; Look and feel
 ;;-----------------------------------------------------------------------------
 
-;; C/C++ mode
-(setq c-default-style "bsd"
-      c-basic-offset 4)
+;; Disable the startup message
+(setq inhibit-startup-screen t)
 
-(defun my-c++-mode-hook ()
-  ;; switch/case:  make each case line indent from switch
-  (c-set-offset 'case-label '+)
-)
+;; Disable menu, scroll and tool bars
+(menu-bar-mode -1)
+(when (fboundp 'tool-bar-mode)
+  (tool-bar-mode -1))
+(when (fboundp 'scroll-bar-mode)
+  (scroll-bar-mode -1))
 
-(add-hook 'c++-mode-hook 'my-c++-mode-hook)
+;; Line and column numbers on.
+(line-number-mode 1)
+(column-number-mode 1)
 
-;; groovy-mode
-;; (require 'groovy-mode)
+;; Line fill set to 79
+(setq-default fill-column 79)
 
-;; (defun my-groovy-mode-hook ()
-;;   "Hooks for Groovy mode."
-;;   (require 'groovy-electric)
-;;   (groovy-electric-mode)
-;;   )
+;; Highlight matching parens
+(show-paren-mode 1)
 
-;; (add-hook 'groovy-mode-hook 'my-groovy-mode-hook)
+;; Tab width set to 4
+(setq tab-width 4)
 
-;; web-mode
-(require 'web-mode)
-(add-to-list 'auto-mode-alist '("\\.phtml\\'" . web-mode))
-(add-to-list 'auto-mode-alist '("\\.tpl\\.php\\'" . web-mode))
-(add-to-list 'auto-mode-alist '("\\.[agj]sp\\'" . web-mode))
-(add-to-list 'auto-mode-alist '("\\.as[cp]x\\'" . web-mode))
-(add-to-list 'auto-mode-alist '("\\.erb\\'" . web-mode))
-(add-to-list 'auto-mode-alist '("\\.mustache\\'" . web-mode))
-(add-to-list 'auto-mode-alist '("\\.djhtml\\'" . web-mode))
-(add-to-list 'auto-mode-alist '("\\.html?\\'" . web-mode))
-(add-to-list 'auto-mode-alist '("\\.css?\\'" . web-mode))
-(add-to-list 'auto-mode-alist '("\\.js?\\'" . web-mode))
+;; No tabs for indentation
+(setq-default indent-tabs-mode nil)
 
-(defun my-web-mode-hook ()
-  "Hooks for Web mode."
-  (setq web-mode-markup-indent-offset 2)
-  (setq web-mode-css-indent-offset 2)
-  (setq web-mode-code-indent-offset 2)
-  )
+;; Automatically indent after a newline (like vi)
+(global-set-key (kbd "RET") 'newline-and-indent)
 
-(add-hook 'web-mode-hook  'my-web-mode-hook)
+;; Save position when buffers are closed
+(setq-default save-place t)
 
-;; org mode
-(require 'org)
-(global-set-key "\C-cl" 'org-store-link)
-(global-set-key "\C-ca" 'org-agenda)
-(global-set-key "\C-cc" 'org-capture)
+;; load solarized. I prefer zen-burn.
+;; (load-theme 'solarized-light t)
+;; (load-theme 'solarized-dark t)
 
-;;==============================================================================
+;; load zen-burn.
+(load-theme 'zenburn t)
+
+;;=============================================================================
+
 
 ;;-----------------------------------------------------------------------------
 ;; MAC OSX Specific stuff
@@ -313,6 +371,7 @@
 ;;==============================================================================
 (setenv "DICTIONARY" "en_US")
 
+
 ;;------------------------------------------------------------------------------
 ;; Customization code below this set through GUI customization.
 ;; Don't edit anything below this manually. Any new functionality goes above.
@@ -324,7 +383,7 @@
  ;; If there is more than one, they won't work right.
  '(package-selected-packages
    (quote
-    (org zenburn-theme web-mode volatile-highlights solarized-theme smex move-text magit ido-vertical-mode gitignore-mode gitconfig-mode git-timemachine flycheck expand-region browse-kill-ring auctex anzu ace-window ace-jump-buffer))))
+    (org-plus-contrib org zenburn-theme web-mode volatile-highlights solarized-theme smex move-text magit ido-vertical-mode gitignore-mode gitconfig-mode git-timemachine flycheck expand-region browse-kill-ring auctex anzu ace-window ace-jump-buffer))))
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.
