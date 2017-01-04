@@ -56,6 +56,7 @@
     browse-kill-ring
     ;; discover-my-major ;; keybinds
     ;; diminish ;; suppress mode info
+    fill-column-indicator ;; show line at fill column
     ;;----------------------------------------------------
     ;; version control
     ;;----------------------------------------------------
@@ -392,6 +393,11 @@
 
 ;; load zen-burn.
 (load-theme 'zenburn t)
+
+;; fill column indicator
+(setq fci-rule-width 1)
+(setq fci-rule-color "#3f3f3f")
+(add-hook 'after-change-major-mode-hook 'fci-mode)
 
 ;;=============================================================================
 
