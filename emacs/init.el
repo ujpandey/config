@@ -134,7 +134,7 @@
 (defun my-c++-mode-hook ()
   ;; switch/case:  make each case line indent from switch
   (c-set-offset 'case-label '+)
-)
+  )
 
 (add-hook 'c++-mode-hook 'my-c++-mode-hook)
 
@@ -200,6 +200,43 @@
 
 (require 'ox-latex)
 (setq org-src-fontify-natively t)
+
+;;-----------------------------------------------------------------------------
+;; org-latex classes
+;;-----------------------------------------------------------------------------
+(add-to-list 'org-latex-classes
+             '("liow-article"
+               "\\documentclass[a4paper,headsepline,footsepline,openany,oneside,chapterprefix,12pt]{scrartcl}
+[NO-DEFAULT-PACKAGES]
+\\usepackage[colorlinks=true,citecolor=green,filecolor=magenta,linkcolor=blue,urlcolor=blue]{hyperref}
+\\usepackage{liowarticle}"
+               ("\\section{%s}" . "\\section*{%s}")
+               ("\\subsection{%s}" . "\\subsection*{%s}")
+               ("\\subsubsection{%s}" . "\\subsubsection*{%s}")
+               ("\\paragraph{%s}" . "\\paragraph*{%s}")
+               ("\\subparagraph{%s}" . "\\subparagraph*{%s}")))
+
+(add-to-list 'org-latex-classes
+             '("ujp-article"
+               "\\documentclass{article}
+\\usepackage[utf8]{inputenc}
+\\usepackage[T1]{fontenc}
+\\usepackage{graphicx}
+\\usepackage{longtable}
+\\usepackage[hyperref,x11names]{xcolor}
+\\usepackage[colorlinks=true,citecolor=Chartreuse4,filecolor=AntiqueWhite4,linkcolor=Firebrick4,urlcolor=SteelBlue4]{hyperref}
+\\usepackage{natbib}
+\\usepackage{amssymb}
+\\usepackage{amsmath}
+\\usepackage{geometry}
+\\geometry{a4paper,left=2.5cm,top=2cm,right=2.5cm,bottom=2cm,marginparsep=7pt, marginparwidth=.6in}"
+               ("\\section{%s}" . "\\section*{%s}")
+               ("\\subsection{%s}" . "\\subsection*{%s}")
+               ("\\subsubsection{%s}" . "\\subsubsection*{%s}")
+               ("\\paragraph{%s}" . "\\paragraph*{%s}")
+               ("\\subparagraph{%s}" . "\\subparagraph*{%s}")))
+;;-----------------------------------------------------------------------------
+
 ;; (add-to-list 'org-latex-packages-alist '("" "minted"))
 ;; (setq org-latex-listings 'minted)
 ;; (setq org-latex-minted-options
